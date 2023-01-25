@@ -36,6 +36,8 @@ dependencies {
 //    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
 //    implementation("org.springframework.kafka:spring-kafka")
 
+    implementation("com.rometools:rome:1.18.0")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
