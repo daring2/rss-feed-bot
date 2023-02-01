@@ -1,16 +1,16 @@
 package ru.itsyn.rss_feed_bot;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
+@RequiredArgsConstructor
 public class RssFeedBot extends TelegramLongPollingBot {
 
-    @Autowired
-    protected RssFeedBotConfig config;
+    final RssFeedBotConfig config;
 
     @Override
     public String getBotUsername() {
