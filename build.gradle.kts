@@ -37,7 +37,7 @@ dependencies {
 //    implementation("org.springframework.kafka:spring-kafka")
 
     implementation("com.rometools:rome:1.18.0")
-//    implementation("org.telegram:telegrambots:6.4.0")
+    implementation("org.telegram:telegrambots-spring-boot-starter:6.4.0")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

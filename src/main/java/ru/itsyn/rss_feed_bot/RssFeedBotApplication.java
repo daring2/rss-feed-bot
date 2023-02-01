@@ -3,18 +3,13 @@ package ru.itsyn.rss_feed_bot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.context.annotation.Bean;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import org.springframework.context.annotation.Import;
+import org.telegram.telegrambots.starter.TelegramBotStarterConfiguration;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
+@Import(TelegramBotStarterConfiguration.class)
 public class RssFeedBotApplication {
-
-    @Bean
-    public TelegramBotsApi telegramBotsApi() throws Exception {
-        return new TelegramBotsApi(DefaultBotSession.class);
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(RssFeedBotApplication.class, args);
