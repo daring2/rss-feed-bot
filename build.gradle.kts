@@ -36,6 +36,7 @@ dependencies {
 //    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
 //    implementation("org.springframework.kafka:spring-kafka")
 
+    implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("com.rometools:rome:1.18.0")
     implementation("org.telegram:telegrambots-spring-boot-starter:6.4.0")
 
