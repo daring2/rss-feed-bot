@@ -29,12 +29,18 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-cache")
-//    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 //    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-//    implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 //    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
 //    implementation("org.springframework.kafka:spring-kafka")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+//    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+//    implementation("org.hibernate.validator:hibernate-validator")
+    implementation("org.flywaydb:flyway-core:9.15.2")
+    implementation("com.h2database:h2")
+//    runtimeOnly("org.postgresql:postgresql")
 
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("com.rometools:rome:2.1.0")
@@ -42,9 +48,6 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
-//    runtimeOnly("com.h2database:h2")
-//    runtimeOnly("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")

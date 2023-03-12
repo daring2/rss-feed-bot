@@ -1,1 +1,6 @@
 spring.main.banner-mode: off
+
+spring:
+  datasource:
+    url: jdbc:h2:./deploy/rss_feed_bot
+    username: sa
