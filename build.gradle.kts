@@ -20,6 +20,7 @@ repositories {
     mavenCentral()
 }
 
+val telegramBotsVersion = "6.5.0"
 //extra["springCloudVersion"] = "2022.0.0"
 //extra["testcontainersVersion"] = "1.17.6"
 
@@ -38,12 +39,13 @@ dependencies {
 
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("com.rometools:rome:2.1.0")
-    implementation("org.telegram:telegrambots-spring-boot-starter:6.5.0")
+    implementation("org.telegram:telegrambots-spring-boot-starter:$telegramBotsVersion")
+    implementation("org.telegram:telegrambots-abilities:$telegramBotsVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-//    runtimeOnly("com.h2database:h2")
+    implementation("com.h2database:h2")
 //    runtimeOnly("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
