@@ -3,8 +3,12 @@ package ru.itsyn.rss_feed_bot;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.itsyn.rss_feed_bot.subscription.Subscription;
+import ru.itsyn.rss_feed_bot.subscription.SubscriptionRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -17,8 +21,6 @@ public class BotSession {
     final RssFeedBot bot;
     final Long chatId;
 
-    final Set<String> subscriptions = new LinkedHashSet<>();
-
     String lastCommand;
 
     public void processUpdate(Update update) throws Exception {
@@ -30,7 +32,8 @@ public class BotSession {
             return;
         var command = arguments.get(0);
         if ("/list".equals(command)) {
-            sendListText("Current subscriptions", subscriptions);
+            var feedUrls = findCurrentSubscriptions();
+            sendListText("Current subscriptions", feedUrls);
             lastCommand = null;
             return;
         }
@@ -38,12 +41,12 @@ public class BotSession {
             sendText("Please specify feed URLs");
             return;
         }
-        var feedUrls = arguments.subList(1, arguments.size());
+        var feedUrls = parseFeedUrls(arguments);
         if ("/add".equals(command)) {
-            feedUrls.forEach(subscriptions::add);
+            feedUrls.forEach(this::addSubscription);
             sendListText("The subscriptions are added", feedUrls);
         } else if ("/remove".equals(command)) {
-            feedUrls.forEach(subscriptions::remove);
+            feedUrls.forEach(this::removeSubscription);
             sendListText("The subscriptions are removed", feedUrls);
         }
         lastCommand = null;
@@ -69,6 +72,34 @@ public class BotSession {
         return arguments;
     }
 
+    protected List<String> parseFeedUrls(List<String> arguments) {
+        //TODO normalize URLs
+        return arguments.subList(1, arguments.size());
+    }
+
+    protected List<String> findCurrentSubscriptions() {
+        return subscriptionRepository().findFeedUrlsByChatId(chatId);
+    }
+
+    protected void addSubscription(String feedUrl) {
+        var subscription = subscriptionRepository()
+                .findByChatIdAndFeedUrl(chatId, feedUrl);
+        if (subscription != null)
+            return;
+        subscription = new Subscription();
+        subscription.setChatId(chatId);
+        subscription.setFeedUrl(feedUrl);
+        subscriptionRepository().save(subscription);
+    }
+
+    protected void removeSubscription(String feedUrl) {
+        var subscription = subscriptionRepository()
+                .findByChatIdAndFeedUrl(chatId, feedUrl);
+        if (subscription == null)
+            return;
+        subscriptionRepository().delete(subscription);
+    }
+
     protected void sendListText(String title, Collection<String> items) throws Exception {
         var text = new StringBuilder();
         text.append(title).append(":");
@@ -84,6 +115,10 @@ public class BotSession {
                 .text(text)
                 .build();
         bot.execute(message);
+    }
+
+    final SubscriptionRepository subscriptionRepository() {
+        return bot.context.subscriptionRepository;
     }
 
 }
