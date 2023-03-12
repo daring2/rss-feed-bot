@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -21,36 +19,58 @@ public class BotSession {
 
     final Set<String> subscriptions = new LinkedHashSet<>();
 
+    String lastCommand;
+
     public void processUpdate(Update update) throws Exception {
         var message = update.getMessage();
-        if (message == null || !message.isCommand())
+        if (message == null)
             return;
         var arguments = parseArguments(message.getText());
         if (arguments.size() == 0)
             return;
         var command = substringBefore(arguments.get(0), "@");
         if ("/list".equals(command)) {
-            var replyText = new StringBuilder();
-            replyText.append("Current subscriptions:");
-            for (String url : subscriptions) {
-                replyText.append("\n - ").append(url);
-            }
-            sendText(replyText.toString());
-        } else if ("/add".equals(command)) {
-            var url = arguments.get(1);
-            subscriptions.add(url);
-            sendText("The subscription is added: " + url);
-        } else if ("/remove".equals(command)) {
-            var url = arguments.get(1);
-            subscriptions.remove(url);
-            sendText("The subscription is removed: " + url);
+            sendListText("Current subscriptions", subscriptions);
+            lastCommand = null;
+            return;
         }
+        if (arguments.size() == 1) {
+            sendText("Please specify feed URLs");
+            return;
+        }
+        var feedUrls = arguments.subList(1, arguments.size());
+        if ("/add".equals(command)) {
+            feedUrls.forEach(subscriptions::add);
+            sendListText("The subscriptions are added", feedUrls);
+        } else if ("/remove".equals(command)) {
+            feedUrls.forEach(subscriptions::remove);
+            sendListText("The subscriptions are removed", feedUrls);
+        }
+        lastCommand = null;
     }
 
     protected List<String> parseArguments(String text) {
         if (isBlank(text))
             return emptyList();
-        return asList(text.split("\\s"));
+        var arguments = new ArrayList<String>();
+        var isCommand = text.startsWith("/");
+        if (!isCommand && lastCommand != null) {
+            arguments.add(lastCommand);
+        }
+        arguments.addAll(asList(text.split("[\\s]")));
+        if (isCommand && arguments.size() == 1) {
+            lastCommand = arguments.get(0);
+        }
+        return arguments;
+    }
+
+    protected void sendListText(String title, Collection<String> items) throws Exception {
+        var text = new StringBuilder();
+        text.append(title).append(":");
+        for (String item : items) {
+            text.append("\n - ").append(item);
+        }
+        sendText(text.toString());
     }
 
     protected void sendText(String text) throws Exception {
