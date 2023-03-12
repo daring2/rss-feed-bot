@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.0.2"
+    id("org.springframework.boot") version "3.0.4"
     id("io.spring.dependency-management") version "1.1.0"
 //    id("org.graalvm.buildtools.native") version "0.9.19"
 }
@@ -37,8 +37,8 @@ dependencies {
 //    implementation("org.springframework.kafka:spring-kafka")
 
     implementation("org.apache.commons:commons-lang3:3.12.0")
-    implementation("com.rometools:rome:1.18.0")
-    implementation("org.telegram:telegrambots-spring-boot-starter:6.4.0")
+    implementation("com.rometools:rome:2.1.0")
+    implementation("org.telegram:telegrambots-spring-boot-starter:6.5.0")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
