@@ -27,8 +27,6 @@ public class RssFeedBot extends TelegramLongPollingBot {
 
     final Set<String> subscriptions = new LinkedHashSet<>();
 
-    String lastCommand;
-
     @Override
     public String getBotUsername() {
         return "rss_feed_pbot";
@@ -45,7 +43,7 @@ public class RssFeedBot extends TelegramLongPollingBot {
 
     protected void processUpdate(Update update) throws Exception {
         var message = update.getMessage();
-        if (message == null)
+        if (message == null || !message.isCommand())
             return;
         var chatId = message.getChatId();
         var arguments = parseArguments(message.getText());
@@ -59,38 +57,21 @@ public class RssFeedBot extends TelegramLongPollingBot {
                 replyText.append("\n - ").append(url);
             }
             sendText(chatId, replyText.toString());
-            lastCommand = null;
-            return;
-        }
-        if (arguments.size() == 1) {
-            sendText(chatId, "Please specify a feed URL");
-            return;
-        }
-        if ("/add".equals(command)) {
+        } else if ("/add".equals(command)) {
             var url = arguments.get(1);
             subscriptions.add(url);
             sendText(chatId, "The subscription is added: " + url);
-            lastCommand = null;
         } else if ("/remove".equals(command)) {
             var url = arguments.get(1);
             subscriptions.remove(url);
             sendText(chatId, "The subscription is removed: " + url);
-            lastCommand = null;
         }
     }
 
     protected List<String> parseArguments(String text) {
         if (isBlank(text))
             return emptyList();
-        var arguments = new ArrayList<String>();
-        if (lastCommand != null && !text.startsWith("/")) {
-            arguments.add(lastCommand);
-        }
-        arguments.addAll(asList(text.split(" ")));
-        if (text.startsWith("/")) {
-            lastCommand = arguments.get(0);
-        }
-        return arguments;
+        return asList(text.split(" "));
     }
 
     protected void sendText(Long chatId, String text) throws Exception {
