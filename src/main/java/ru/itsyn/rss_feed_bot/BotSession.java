@@ -28,7 +28,7 @@ public class BotSession {
         var arguments = parseArguments(message.getText());
         if (arguments.size() == 0)
             return;
-        var command = substringBefore(arguments.get(0), "@");
+        var command = arguments.get(0);
         if ("/list".equals(command)) {
             sendListText("Current subscriptions", subscriptions);
             lastCommand = null;
@@ -58,8 +58,13 @@ public class BotSession {
             arguments.add(lastCommand);
         }
         arguments.addAll(asList(text.split("[\\s]")));
+        var command = arguments.get(0);
+        if (isCommand && command.contains("@")) {
+            command = substringBefore(command, "@");
+            arguments.set(0, command);
+        }
         if (isCommand && arguments.size() == 1) {
-            lastCommand = arguments.get(0);
+            lastCommand = command;
         }
         return arguments;
     }
