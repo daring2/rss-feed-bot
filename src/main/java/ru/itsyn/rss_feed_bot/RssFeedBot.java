@@ -48,21 +48,22 @@ public class RssFeedBot extends TelegramLongPollingBot {
             return;
         var chatId = message.getChatId();
         var arguments = text.split(" ");
-        if (text.startsWith("/list")) {
+        var command = arguments[0];
+        if ("/list".equals(command)) {
             var replyText = new StringBuilder();
             replyText.append("Current subscriptions:");
             for (String url : subscriptions) {
                 replyText.append("\n - ").append(url);
             }
             sendText(chatId, replyText.toString());
-        } else if (text.startsWith("/add")) {
+        } else if ("/add".equals(command)) {
             var url = arguments[1];
             subscriptions.add(url);
-            sendText(chatId, "Subscription is added: " + url);
-        } else if (text.startsWith("/remove")) {
+            sendText(chatId, "The subscription is added: " + url);
+        } else if ("/remove".equals(command)) {
             var url = arguments[1];
             subscriptions.remove(url);
-            sendText(chatId, "Subscription is removed: " + url);
+            sendText(chatId, "The subscription is removed: " + url);
         }
     }
 
