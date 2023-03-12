@@ -38,7 +38,7 @@ public class BotSession {
             return;
         }
         if (arguments.size() == 1) {
-            sendText("Please specify feed URLs");
+            sendText("Please send me feed URLs for command " + command);
             return;
         }
         var feedUrls = parseFeedUrls(arguments);
